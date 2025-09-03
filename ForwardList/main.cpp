@@ -8,34 +8,35 @@ using namespace std;
 	{
 		int Data;
 		Element* pNext;
-		Element* pPrev;	//предыдущий элемент
-		
+		static int count;
 	public:
-		Element(int Data, Element* pNext = nullptr, Element* pPrev = nullptr)
+		Element(int Data, Element* pNext = nullptr)
 		{
 			this->Data = Data;
 			this->pNext = pNext;
-			this->pPrev = pPrev;
+			count++;
 			cout << "EConstructor:\t" << this << endl;
 		}
 		~Element()
 		{
+			count--;
 			cout << "EDestructor:\t" << this << endl;
 		}
 		friend class ForwardList;
 	};
+	int Element::count = 0;
+
+
 
 	class ForwardList
 	{
 		Element* Head;
-		Element* Tail;	//Хвост
-		//int SIZE;
 	public:
 		ForwardList()
 		{
 			//Конструктор по умолчанию - создаёт пустой список
 			Head = nullptr; //Если список пуст, то его голова указывает на ноль
-			Tail = nullptr;
+
 			cout << "FLConstructor:\t" << this << endl;
 		}
 		~ForwardList()
@@ -54,90 +55,55 @@ using namespace std;
 
 			//3) Переносим голову на новый элемент (Отправляем новый элемент в голову):
 			Head = New;
-			//SIZE++;
 		}
 
 		void push_back(int Data)
 		{
+			if (Head == nullptr)
+			{
+				return push_front(Data);
+			}
 			Element* New = new Element(Data);
-			//обновляем показатели хвоста и нового элемента
-			if (Tail)
-			{
-				Tail->pNext = New;
-				New->pPrev = Tail;
-				Tail = New;
-			}
-			else
-			{
-				Head = Tail = New;		//Если список пуст - устанавливаем новый элемент как голову и хвост
-			}
-			//SIZE++;
+
+			Element* Temp = Head;
+
+			while (Temp->pNext)Temp = Temp->pNext;
+			
+			Temp->pNext = New;
 		}
 		void Insert(int Index, int Data)
 		{
-			//if (Index > SIZE)
-			//{
-			//	cout << "Index out of range" << endl;
-			//}
-			if (Index == 0)
-			{
-				push_front(Data);
-			}
-			//else if (Index == SIZE)
-			//{
-			//	push_back(Data);
-			//}
-			else
-			{
-				Element* place = Head;
-				for (int i = 0; i < Index; i++)
-				{
-					place = place->pNext;
-				}
-				Element* New = new Element(Data);
-				New->pPrev = place->pPrev;
-				New->pNext = place;
-				place->pPrev->pNext = New;
-				place->pPrev = New;
-				//SIZE++;
-			}
-		}
+			if (Index == 0) return push_front(Data);
+			if (Index >= Element::count)return push_back(Data);
+			//1) Доходим до нужного элемента (элемент перед добавляемым)
+			Element* Temp = Head;
+			for (int i = 0; i < Index-1; i++)Temp = Temp->pNext;
 
+			//2) Создаём добавляемый элемент
+			Element* New = new Element(Data);
+
+			//3) Пристыковываем новый элемент к его следуюущему элементу:
+			New->pNext = Temp->pNext;
+
+			//4) Пристыковываем предыдущий элемент к нововму:
+			Temp->pNext = New;
+		}
+		//						Removing elements:
 		void pop_front()
 		{
-			if (Head == nullptr)
-			{
-				cout << "Список пуст, заполните его для начала." << endl;
-			}
-			//Если элемент хвоста совпадает с элементом головы
-			if (Head == Tail)
-			{
-				delete Head;
-				Head = nullptr;
-				Tail = nullptr;
-			}
-			//Удаляем элемент из начала списка
-			Element* New_Delete = Head;	//Приравниваем новый элемент с головой
-			Head = Head->pNext;	//Даём голове адрес следующего элемента
-			Head->pPrev = nullptr;	//Обновляем указатель головы
-			delete New_Delete;	//Удаляем элемент
+			//1) Запоминаем адрес удаляемого элемента:
+			Element* Erased = Head;
+			//2) Исключаем удаляемый элемент из списка:
+			Head = Head->pNext;
+			//3) Удаляем удаляемый элемент из памяти:
+			delete Erased;
 		}
 		void pop_back()
 		{
-			if (Head == nullptr)
-			{
-				cout << "Список пуст, заполните его для начала." << endl;
-			}
-			if (Head == Tail)
-			{
-				delete Head;
-				Head = nullptr;
-				Tail = nullptr;
-			}
-			Element* New_Delete = Tail;
-			Tail = Tail->pPrev;
-			Tail->pNext = nullptr;
-			delete New_Delete;
+			Element* Temp = Head;
+			while (Temp->pNext->pNext != nullptr)Temp = Temp->pNext;
+			delete Temp->pNext;
+			Temp->pNext = nullptr;
 		}
 		void print()const
 		{
@@ -148,14 +114,17 @@ using namespace std;
 				cout << Temp << tab << Temp->Data << tab << Temp->pNext << endl;
 				Temp = Temp->pNext;
 			}
+			// Temp; - указатель 'Temp'
+			// Temp->...; - Элемент 'Temp'
 		}
 	};
 
-
+//#define BASE_CHECK
 
 void main()
 {
 	setlocale(LC_ALL, "");
+#ifdef BASE_CHECK
 	cout << "ForwardList" << endl;
 	int n;
 	cout << "Введите размер списка: "; cin >> n;
@@ -166,11 +135,42 @@ void main()
 		//list.push_front(rand() % 100);
 		list.push_back(rand() % 100);
 	}
-	//list.Insert(0, 216);
-	//list.Insert(3, 222);
+	list.push_back(123);
 	list.print();
 	list.pop_front();
 	list.print();
 	list.pop_back();
 	list.print();
+	int index;
+	int value;
+	cout << "Введите индекс добавляемого элемента: "; cin >> index;
+	cout << "Введите значение добавляемого элемента: "; cin >> value;
+	list.Insert(index, value);
+	list.print();
+#endif
+
+	ForwardList list1;
+	list1.push_back(0);
+	list1.push_back(1);
+	list1.push_back(1);
+	list1.push_back(2);
+	list1.print();
+
+	ForwardList list2;
+	list2.push_back(3);
+	list2.push_back(5);
+	list2.push_back(8);
+	list2.push_back(13);
+	list2.push_back(21);
+	list2.push_back(34);
+	list2.push_back(55);
+	list2.push_back(89);
+	list2.print();
+
+	int index;
+	int value;
+	cout << "Введите индекс добавляемого элемента: "; cin >> index;
+	cout << "Введите значение добавляемого элемента: "; cin >> value;
+	list1.Insert(value, index);
+	list1.print();
 }
