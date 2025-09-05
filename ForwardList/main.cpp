@@ -36,14 +36,20 @@ using namespace std;
 		{
 			//Конструктор по умолчанию - создаёт пустой список
 			Head = nullptr; //Если список пуст, то его голова указывает на ноль
-
 			cout << "FLConstructor:\t" << this << endl;
 		}
 		~ForwardList()
 		{
+			clear();
 			cout << "FLDestructor:\t" << this << endl;
 		}
-
+		void clear()
+		{
+			while (Head)
+			{
+				delete exchange(Head, Head->pNext);
+			}
+		}
 		//		Adding elements:
 		void push_front(int Data)
 		{
@@ -59,10 +65,8 @@ using namespace std;
 
 		void push_back(int Data)
 		{
-			if (Head == nullptr)
-			{
-				return push_front(Data);
-			}
+			if (Head == nullptr)return push_front(Data);
+
 			Element* New = new Element(Data);
 
 			Element* Temp = Head;
@@ -89,6 +93,15 @@ using namespace std;
 			Temp->pNext = New;
 		}
 		//						Removing elements:
+		void Erase(int Index)
+		{
+			Element* Temp = Head;
+			for (int i = 0; i < Index - 1; i++)Temp = Temp->pNext;
+
+			Element* Erased = Temp->pNext;
+			Temp->pNext = Erased->pNext;
+			delete Erased;
+		}
 		void pop_front()
 		{
 			//1) Запоминаем адрес удаляемого элемента:
@@ -116,11 +129,12 @@ using namespace std;
 			}
 			// Temp; - указатель 'Temp'
 			// Temp->...; - Элемент 'Temp'
+			cout << "Количество элементов списка: " << Element::count << endl;
 		}
 	};
 
-//#define BASE_CHECK
-
+#define BASE_CHECK
+//#define Check_List
 void main()
 {
 	setlocale(LC_ALL, "");
@@ -147,8 +161,11 @@ void main()
 	cout << "Введите значение добавляемого элемента: "; cin >> value;
 	list.Insert(index, value);
 	list.print();
+	list.Erase(3);
+	list.print();
 #endif
 
+#ifdef Check_List
 	ForwardList list1;
 	list1.push_back(0);
 	list1.push_back(1);
@@ -173,4 +190,5 @@ void main()
 	cout << "Введите значение добавляемого элемента: "; cin >> value;
 	list1.Insert(value, index);
 	list1.print();
+#endif
 }
