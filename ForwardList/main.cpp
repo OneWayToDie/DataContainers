@@ -1,11 +1,12 @@
 ﻿#include<iostream>
+#include<time.h>
 using namespace std;
-//using std::cin;
-//using std::cout;
-//using std::endl;;
+using std::cin;
+using std::cout;
+using std::endl;;
 
 #define tab "\t"
-
+#define delimiter "\n----------------------------------------------------------------------\n"
 
 class Element
 {
@@ -18,83 +19,90 @@ public:
 		this->Data = Data;
 		this->pNext = pNext;
 		count++;
+#ifdef Debug
 		cout << "EConstructor:\t" << this << endl;
+#endif	//DEBUG
 	}
 	~Element()
 	{
 		count--;
+#ifdef DEBUG
 		cout << "EDestructor:\t" << this << endl;
+#endif	//DEBUG
 	}
 	friend class ForwardList;
+	friend ForwardList operator+(const ForwardList& left, const ForwardList& right);
 };
 int Element::count = 0;
-
 
 
 class ForwardList
 {
 	Element* Head;
+	size_t size;	//unsigned int
 public:
+	Element* get_Head()const
+	{
+		return Head;
+	}
+	size_t get_size()const
+	{
+		return size;
+	}
 	ForwardList()
 	{
 		//Конструктор по умолчанию - создаёт пустой список
 		Head = nullptr; //Если список пуст, то его голова указывает на ноль
+		size = 0;
 		cout << "FLConstructor:\t" << this << endl;
 	}
+	ForwardList(const ForwardList& other):ForwardList()
+	{
+		//Deep copy (Побитовое копирование):
+		*this = other;
+		cout << "FLCopyConstructor:\t" << this << endl;
+	}	
 	~ForwardList()
 	{
-		clear();
-		cout << "FLDestructor:\t" << this << endl;
+		clock_t t_start = clock();
+		while (Head)pop_front();
+		clock_t t_end = clock();
+		cout << "FLDestructor:\t" << this << "\tcomplete for " << double(t_end - t_start)/CLOCKS_PER_SEC << endl;
 	}
-	void clear()
+	//		Operators:
+	ForwardList& operator=(const ForwardList& other)
 	{
-		while (Head)
-		{
-			//https://legacy.cplusplus.com/reference/atomic/atomic/exchange/
-			delete exchange(Head, Head->pNext);
-		}
+		if (this == &other)return *this;		//0) Проверяем, не являются ли 'this' и 'other' одним объектом.
+		while (Head)pop_front();				//1) Старое значение объекта удаляется из памяти
+		//2)Deep copy (Побитовое копирование):
+		for (Element* Temp = other.Head; Temp; Temp = Temp->pNext)
+			push_back(Temp->Data);
+		cout << "FLCopyAssignment:\t" << this << endl;
+		return *this;
 	}
 	//		Adding elements:
 	void push_front(int Data)
 	{
-		//1)Создаём элемент и сохраняем в него добавляемое значение:
-		Element* New = new Element(Data);
-
-		//2)Привязываем новый, созданный элемент к началу списка
-		New->pNext = Head;
-
-		//3) Переносим голову на новый элемент (Отправляем новый элемент в голову):
-		Head = New;
+		Head = new Element(Data, Head);
+		size++;
 	}
 
 	void push_back(int Data)
 	{
 		if (Head == nullptr)return push_front(Data);
-
-		Element* New = new Element(Data);
-
 		Element* Temp = Head;
-
 		while (Temp->pNext)Temp = Temp->pNext;
-		
-		Temp->pNext = New;
+		Temp->pNext = new Element(Data);
+		size++;
 	}
 	void Insert(int Index, int Data)
 	{
 		if (Index == 0) return push_front(Data);
-		if (Index >= Element::count)return push_back(Data);
-		//1) Доходим до нужного элемента (элемент перед добавляемым)
+		if (Index >= size)return push_back(Data);
 		Element* Temp = Head;
 		for (int i = 0; i < Index-1; i++)Temp = Temp->pNext;
-
-		//2) Создаём добавляемый элемент
-		Element* New = new Element(Data);
-
-		//3) Пристыковываем новый элемент к его следуюущему элементу:
-		New->pNext = Temp->pNext;
-
-		//4) Пристыковываем предыдущий элемент к нововму:
-		Temp->pNext = New;
+		Temp->pNext = new Element(Data, Temp->pNext);
+		size++;
 	}
 	//						Removing elements:
 	void Erase(int Index)
@@ -105,6 +113,7 @@ public:
 		Element* Erased = Temp->pNext;
 		Temp->pNext = Erased->pNext;
 		delete Erased;
+		size--;
 	}
 	void pop_front()
 	{
@@ -114,38 +123,47 @@ public:
 		Head = Head->pNext;
 		//3) Удаляем удаляемый элемент из памяти:
 		delete Erased;
+		size--;
 	}
 	void pop_back()
 	{
+		if (!Head || Head->pNext == nullptr)return pop_front();
 		Element* Temp = Head;
 		while (Temp->pNext->pNext != nullptr)Temp = Temp->pNext;
 		delete Temp->pNext;
 		Temp->pNext = nullptr;
+		size--;
 	}
 	void print()const
 	{
-		Element* Temp = Head;	// Temp - это итератор.
-		//Итератор - это указатель, при помощи которого можно перебирать элементы структуры данных.
-		while (Temp)
-		{
+		for (Element* Temp = Head; Temp; Temp = Temp->pNext)
 			cout << Temp << tab << Temp->Data << tab << Temp->pNext << endl;
-			Temp = Temp->pNext;
-		}
-		// Temp; - указатель 'Temp'
-		// Temp->...; - Элемент 'Temp'
-		cout << "Количество элементов списка: " << Element::count << endl;
+		cout << "Количество элементов списка: " << size << endl;
+		cout << "Общее количество элементов: " << Element::count << endl;
 	}
+	friend ForwardList operator+(const ForwardList& left, const ForwardList& right);
 };
+
+ForwardList operator+(const ForwardList& left, const ForwardList& right)
+{
+	ForwardList fusion;
+	for (Element* Temp = left.get_Head(); Temp; Temp = Temp->pNext)
+		fusion.push_back(Temp->Data);
+	for (Element* Temp = right.Head; Temp; Temp = Temp->pNext)
+		fusion.push_back(Temp->Data);
+	return fusion;
+}
 
 
 //#define BASE_CHECK
-#define Check_List
+#define OPERATOR_PLUS_CHECK
+//#define PERFORMANCE_CHECK
 
 void main()
 {
 	setlocale(LC_ALL, "");
 #ifdef BASE_CHECK
-	cout << "ForwardList" << endl;
+	//cout << "ForwardList" << endl;
 	int n;
 	cout << "Введите размер списка: "; cin >> n;
 	ForwardList list;
@@ -155,23 +173,23 @@ void main()
 		//list.push_front(rand() % 100);
 		list.push_back(rand() % 100);
 	}
-	list.push_back(123);
-	list.print();
-	list.pop_front();
-	list.print();
-	list.pop_back();
-	list.print();
-	int index;
-	int value;
-	cout << "Введите индекс добавляемого элемента: "; cin >> index;
-	cout << "Введите значение добавляемого элемента: "; cin >> value;
-	list.Insert(index, value);
-	list.print();
-	list.Erase(3);
-	list.print();
+	//list.push_back(123);
+	//list.print();
+	//list.pop_front();
+	//list.print();
+	//list.pop_back();
+	//list.print();
+	//int index;
+	//int value;
+	//cout << "Введите индекс добавляемого элемента: "; cin >> index;
+	//cout << "Введите значение добавляемого элемента: "; cin >> value;
+	//list.Insert(index, value);
+	//list.print();
+	//list.Erase(3);
+	//list.print();
 #endif
 
-#ifdef Check_List
+#ifdef OPERATOR_PLUS_CHECK
 	ForwardList list1;
 	list1.push_back(0);
 	list1.push_back(1);
@@ -190,12 +208,33 @@ void main()
 	list2.push_back(89);
 	list2.print();
 
-	int index;
+	//ForwardList fusion = list1 + list2;		//CopyConstructor
+	ForwardList fusion;
+	cout << delimiter << endl;
+	fusion = list1 + list2;						//CopyAssignment
+	cout << delimiter << endl;
+	fusion.print();	
+
+	/*int index;
 	int value;
 	cout << "Введите индекс добавляемого элемента: "; cin >> index;
 	cout << "Введите значение добавляемого элемента: "; cin >> value;
-	list1.Insert(value, index);
-	list1.print();
+	list1.Insert(value, index);*/
+	//list1.print();
+#endif
 
+#ifdef PERFORMANCE_CHECK
+	int n;
+	cout << "Введите размер списка: "; cin >> n;
+	ForwardList list;
+	clock_t t_start = clock();
+	for (int i = 0; i < n; i++)
+	{
+		//list.push_back(rand() % 100);
+		list.push_front(rand() % 100);
+	}
+	clock_t t_end = clock();
+	cout << "ForwardList filled for " << double(t_end - t_start)/CLOCKS_PER_SEC << " sec. ";
+	system("PAUSE");
 #endif
 }
