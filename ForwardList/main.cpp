@@ -3,10 +3,11 @@
 using namespace std;
 using std::cin;
 using std::cout;
-using std::endl;;
+using std::endl;
 
 #define tab "\t"
 #define delimiter "\n----------------------------------------------------------------------\n"
+
 
 class Element
 {
@@ -32,6 +33,7 @@ public:
 	}
 	friend class ForwardList;
 	friend ForwardList operator+(const ForwardList& left, const ForwardList& right);
+	friend std::ostream& operator<<(std::ostream& os, const ForwardList& obj);
 };
 int Element::count = 0;
 
@@ -49,12 +51,20 @@ public:
 	{
 		return size;
 	}
-	ForwardList()
+	explicit ForwardList()
 	{
 		//Конструктор по умолчанию - создаёт пустой список
 		Head = nullptr; //Если список пуст, то его голова указывает на ноль
 		size = 0;
 		cout << "FLConstructor:\t" << this << endl;
+	}
+	ForwardList(Element* Head)
+	{
+		for (int i = 0; i < size; i++)
+		{
+			this->Head[i] = Head[i];
+		}
+		cout << "FLDefaultConstructor:\t" << this << endl;
 	}
 	ForwardList(const ForwardList& other):ForwardList()
 	{
@@ -79,6 +89,52 @@ public:
 			push_back(Temp->Data);
 		cout << "FLCopyAssignment:\t" << this << endl;
 		return *this;
+	}
+	//ForwardList& operator=(ForwardList&& other)
+	//{
+	//	if (this == &other)return *this;
+	//	while (Head)pop_front();
+	//	//Shallow copy
+	//	for (Element* Temp = other.Head; Temp; Temp = Temp->pNext)
+	//	{
+	//		push_back(Temp->Data);
+	//		push_back(other.size);
+	//	}
+	//	other.Head = nullptr;
+	//	other.size = 0;
+	//	cout << "FLMoveAssignment:\t\t" << this << endl;
+	//	return *this;
+	//}
+	ForwardList& operator=(ForwardList&& other) noexcept
+	{
+		if (this == &other) return *this;
+
+		while (Head) pop_front();
+		// ShallowCopy
+		Head = other.Head;
+		size = other.size;
+
+		other.Head = nullptr;
+		other.size = 0;
+
+		cout << "FLMoveAssignment:\t\t" << this << endl;
+		return *this;
+	}
+	Element operator[](int i)const
+	{
+		return Head[i];
+	}
+	Element& operator[](int i)
+	{
+		return Head[i];
+	}
+	ForwardList(ForwardList&& other) noexcept
+	{
+		this->size = other.size;
+		this->Head = other.Head;
+		other.size = 0;
+		other.Head = nullptr;
+		cout << "MoveConstructor:\t" << this << endl;
 	}
 	//		Adding elements:
 	void push_front(int Data)
@@ -142,6 +198,7 @@ public:
 		cout << "Общее количество элементов: " << Element::count << endl;
 	}
 	friend ForwardList operator+(const ForwardList& left, const ForwardList& right);
+	friend std::ostream& operator<<(std::ostream& os, const ForwardList& obj);
 };
 
 ForwardList operator+(const ForwardList& left, const ForwardList& right)
@@ -153,11 +210,16 @@ ForwardList operator+(const ForwardList& left, const ForwardList& right)
 		fusion.push_back(Temp->Data);
 	return fusion;
 }
-
+std::ostream& operator<<(std::ostream& os, const ForwardList& obj)
+{
+	return os << obj.get_Head();
+}
 
 //#define BASE_CHECK
-#define OPERATOR_PLUS_CHECK
+//#define OPERATOR_PLUS_CHECK
 //#define PERFORMANCE_CHECK
+//#define trbIndec
+#define MOVESEMANTIC_CHECK
 
 void main()
 {
@@ -167,7 +229,7 @@ void main()
 	int n;
 	cout << "Введите размер списка: "; cin >> n;
 	ForwardList list;
-	
+
 	for (int i = 0; i < n; i++)
 	{
 		//list.push_front(rand() % 100);
@@ -213,7 +275,7 @@ void main()
 	cout << delimiter << endl;
 	fusion = list1 + list2;						//CopyAssignment
 	cout << delimiter << endl;
-	fusion.print();	
+	fusion.print();
 
 	/*int index;
 	int value;
@@ -234,7 +296,28 @@ void main()
 		list.push_front(rand() % 100);
 	}
 	clock_t t_end = clock();
-	cout << "ForwardList filled for " << double(t_end - t_start)/CLOCKS_PER_SEC << " sec. ";
+	cout << "ForwardList filled for " << double(t_end - t_start) / CLOCKS_PER_SEC << " sec. ";
 	system("PAUSE");
+#endif
+
+#ifdef trbIndec
+	ForwardList list;
+
+	for (int i = 0; i < list.get_size(); i++)
+	{
+		list[i] = rand() % 100;
+	}
+	for (int i = 0; i < list.get_size(); i++)
+	{
+		cout << list[i] << tab;
+	}
+	cout << endl;
+#endif
+
+#ifdef MOVESEMANTIC_CHECK
+	ForwardList list1;
+	cout << list1 << endl;
+	ForwardList list2 = list1;
+	cout << list2 << endl;
 #endif
 }
