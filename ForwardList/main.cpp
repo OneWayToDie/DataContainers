@@ -120,13 +120,17 @@ public:
 		cout << "FLMoveAssignment:\t\t" << this << endl;
 		return *this;
 	}
-	Element operator[](int i)const
+	const Element operator[](int size)const
 	{
-		return Head[i];
+		Element* Temp = Head;
+		for (int i = 0; i < size; i++)Temp = Temp->pNext;
+		return Temp->Data;
 	}
-	Element& operator[](int i)
+	Element operator[](int size)
 	{
-		return Head[i];
+		Element* Temp = Head;
+		for (int i = 0; i < size; i++)Temp = Temp->pNext;
+		return Temp->Data;
 	}
 	ForwardList(ForwardList&& other) noexcept
 	{
