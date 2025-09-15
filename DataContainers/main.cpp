@@ -358,6 +358,7 @@ List operator+(const List& left, const List& right)
 	{
 		*it *= 100;
 		fusion.push_back(*it);
+
 	}
 	return fusion;
 }
