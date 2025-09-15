@@ -117,6 +117,35 @@ public:
 	}
 
 	//		Removing Elements:
+	void Erase(int Index)
+	{
+		if (Index < 0)return;
+		if (Index == 0 || size == 0)return pop_front();
+		if (Index >= size - 1)return pop_back();
+		Element* Temp;
+		if (Index < size / 2)
+		{
+			Temp = Head;
+			for (int i = 0; i < Index; i++)Temp = Temp->pNext;
+			Element* Erased = Temp;
+			Temp = Temp->pPrev;
+			Temp->pNext = Erased->pNext;
+			delete Erased;
+			Temp = nullptr;
+		}
+		else
+		{
+			Temp = Tail;
+			for (int i = 0; i < size - Index - 1; i++)Temp = Temp->pPrev;
+			Element* Erased = Temp;
+			Erased->pPrev = Temp->pPrev;
+			Temp = Temp->pPrev;
+			Temp->pNext = Erased->pNext;
+			delete Erased;
+			Temp = nullptr;
+		}
+		size--;
+	}
 	void pop_front()
 	{
 		if (Head == nullptr && Tail == nullptr)return;
@@ -203,20 +232,23 @@ void main()
 		//list.push_front(rand() % 100);
 		list.push_back(rand() % 100);
 	}
-
 	list.print();
-	list.reverse_print();
+
+	//list.reverse_print();
 	/*list.pop_back();
 	list.print();
 	list.reverse_print();*/
 
 	int index;
-	int value;
-	cout << "Введите индекс добавляемого элемента: "; cin >> index;
-	cout << "Введите значение добавляемого элемента: "; cin >> value;
-	list.insert(value, index);
+	//int value;
+	//cout << "Введите индекс добавляемого элемента: "; cin >> index;
+	//cout << "Введите значение добавляемого элемента: "; cin >> value;
+	//list.insert(value, index);
+	//list.print();
+	//list.reverse_print();
+	cout << "Введите индекс удаляемого элемента: "; cin >> index;
+	list.Erase(index);
 	list.print();
-	list.reverse_print();
 #endif // BASE_CHECK
 
 #ifdef HOMEWORK
