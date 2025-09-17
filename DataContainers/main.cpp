@@ -1,7 +1,6 @@
 #include<iostream>
 using namespace std;
 
-
 #define tab "\t"
 #define delimiter "\n----------------------------------------------------------\n"
 
@@ -141,8 +140,7 @@ public:
 	ConstReverseIterator rbegin()const
 	{
 		return Tail;
-	}
-	ConstReverseIterator rend()const
+	}	ConstReverseIterator rend()const
 	{
 		return nullptr;
 	}
@@ -427,7 +425,6 @@ void main()
 #endif // BASE_CHECK
 
 #ifdef HOMEWORK
-
 	List list1 = { 3, 5, 8, 13, 21 };
 	List list2 = { 34, 55, 89 };
 	//list1.print();
@@ -452,5 +449,4 @@ void main()
 	}
 	cout << endl;
 #endif
-
 }
