@@ -19,33 +19,4 @@
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="stdafx.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="List.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="FullConection.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Methods.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="RemovingMethods.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Operators.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Constructors.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Iterator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="AddingElements.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-  </ItemGroup>
 </Project>

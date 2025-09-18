@@ -1,4 +1,6 @@
+#pragma once
 #include"stdafx.h"
+
 
 //		Adding Elements:
 template<typename T>void List<T>::push_front(T Data)

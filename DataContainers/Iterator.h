@@ -1,5 +1,5 @@
+#pragma once
 #include"stdafx.h"
-
 
 template<typename T>typename List<T>::ConstIterator List<T>::begin()const
 {

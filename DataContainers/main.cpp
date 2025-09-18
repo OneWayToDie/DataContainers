@@ -12,7 +12,7 @@ void main()
 #ifdef BASE_CHECK
 	int n;
 	cout << "¬ведите размер списка: "; cin >> n;
-	List list;
+	List<int> list;
 	list.pop_front();
 	list.print();
 	for (int i = 0; i < n; i++)

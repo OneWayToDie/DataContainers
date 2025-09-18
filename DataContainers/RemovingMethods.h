@@ -1,5 +1,5 @@
+#pragma once
 #include"stdafx.h"
-
 
 //		Removing Elements:
 template<typename T>void List<T>::Erase(int Index)

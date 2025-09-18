@@ -1,6 +1,5 @@
 #include"stdafx.h"
 
-
 //		Methods:
 template<typename T>void List<T>::print()const
 {
