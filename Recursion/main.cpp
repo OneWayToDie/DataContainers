@@ -1,4 +1,4 @@
-#include<iostream>
+ï»¿#include<iostream>
 using std::cin;
 using std::cout;
 using std::endl;
@@ -7,8 +7,8 @@ using std::endl;
 
 //#define ELEVATOR
 //#define FACTORIAL
-//#define FIBONACHI
-#define PowerRangersGoAhead
+#define FIBONACHI
+//#define PowerRangersGoAhead
 
 void elevator(int floor);
 int factorial(int number);
@@ -20,35 +20,35 @@ void main()
 	setlocale(LC_ALL, "");
 #ifdef ELEVATOR
 	int n;
-	cout << "Ââåäèòå íîìåð ýòàæà: "; cin >> n;
+	cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ Ð½Ð¾Ð¼ÐµÑ€ ÑÑ‚Ð°Ð¶Ð°: "; cin >> n;
 	elevator(n);
 	//cout << "Recursion";
 	main();
 #endif // ELEVATOR
 
 #ifdef FACTORIAL
-	int n; cout << "Ââåäèòå ôàêòîðèàë ÷èñëà: "; cin >> n;
+	int n; cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ Ñ„Ð°ÐºÑ‚Ð¾Ñ€Ð¸Ð°Ð» Ñ‡Ð¸ÑÐ»Ð°: "; cin >> n;
 	int result = factorial(n);
-	cout << "Ôàêòîðèàë ÷èñëà " << n << " - " << result << endl;
+	cout << "Ð¤Ð°ÐºÑ‚Ð¾Ñ€Ð¸Ð°Ð» Ñ‡Ð¸ÑÐ»Ð° " << n << " - " << result << endl;
 	main();
 #endif // FACTORIAL
 
 #ifdef FIBONACHI
-	int n; cout << "Ââåäèòå êîëè÷åñòâî ÷èñåë ðÿäà Ôèáîíà÷è: "; cin >> n;
-	if(n >= 5) cout << "Ðÿä ÷èñåë Ôèáîíà÷è äî óêàçàííîãî ïðåäåëà â " << n << " ÷èñåë - \t";
-	if(n < 5 && n > 1) cout << "Ðÿä ÷èñåë Ôèáîíà÷è äî óêàçàííîãî ïðåäåëà â " << n << " ÷èñëà - \t";
-	if(n == 1) cout << "Ýòî íå ðÿä, à òû äóðàê, èäè â íàðÿä - \t";
-	if (n == 0) cout << "Âû ïîïàëè â äæîêóøêó ëîâóøêåðà";
+	int n; cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ ÐºÐ¾Ð»Ð¸Ñ‡ÐµÑÑ‚Ð²Ð¾ Ñ‡Ð¸ÑÐµÐ» Ñ€ÑÐ´Ð° Ð¤Ð¸Ð±Ð¾Ð½Ð°Ñ‡Ð¸: "; cin >> n;
+	if(n >= 5) cout << "Ð ÑÐ´ Ñ‡Ð¸ÑÐµÐ» Ð¤Ð¸Ð±Ð¾Ð½Ð°Ñ‡Ð¸ Ð´Ð¾ ÑƒÐºÐ°Ð·Ð°Ð½Ð½Ð¾Ð³Ð¾ Ð¿Ñ€ÐµÐ´ÐµÐ»Ð° Ð² " << n << " Ñ‡Ð¸ÑÐµÐ» - \t";
+	if(n < 5 && n > 1) cout << "Ð ÑÐ´ Ñ‡Ð¸ÑÐµÐ» Ð¤Ð¸Ð±Ð¾Ð½Ð°Ñ‡Ð¸ Ð´Ð¾ ÑƒÐºÐ°Ð·Ð°Ð½Ð½Ð¾Ð³Ð¾ Ð¿Ñ€ÐµÐ´ÐµÐ»Ð° Ð² " << n << " Ñ‡Ð¸ÑÐ»Ð° - \t";
+	if(n == 1) cout << "Ð­Ñ‚Ð¾ Ð½Ðµ Ñ€ÑÐ´, Ð° Ñ‚Ñ‹ Ð´ÑƒÑ€Ð°Ðº, Ð¸Ð´Ð¸ Ð² Ð½Ð°Ñ€ÑÐ´ - \t";
+	if (n == 0) cout << "Ð’Ñ‹ Ð¿Ð¾Ð¿Ð°Ð»Ð¸ Ð² Ð´Ð¶Ð¾ÐºÑƒÑˆÐºÑƒ Ð»Ð¾Ð²ÑƒÑˆÐºÐµÑ€Ð°";
 	if (n > 46) n = 46;
 	int result = fibonachi(1,1,n); cout << endl;
 	main();
 #endif // FIBONACHI
 
 #ifdef PowerRangersGoAhead
-	int number; cout << "Ââåäèòå ÷èñëî: "; cin >> number;
-	int degree; cout << "Ââåäèòå ñòåïåíü: "; cin >> degree;
+	int number; cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ Ñ‡Ð¸ÑÐ»Ð¾: "; cin >> number;
+	int degree; cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ ÑÑ‚ÐµÐ¿ÐµÐ½ÑŒ: "; cin >> degree;
 	int result = powerr(number, degree);
-	cout << "Ðåçóëüòàò âîçâåäåíèÿ â ñòåïåíü - " << result << endl;
+	cout << "Ð ÐµÐ·ÑƒÐ»ÑŒÑ‚Ð°Ñ‚ Ð²Ð¾Ð·Ð²ÐµÐ´ÐµÐ½Ð¸Ñ Ð² ÑÑ‚ÐµÐ¿ÐµÐ½ÑŒ - " << result << endl;
 	main();
 #endif // PowerRangersGoAhead
 }
@@ -57,12 +57,12 @@ void elevator(int floor)
 {
 	if (floor == 0)
 	{
-		cout << "Âû â ïîäâàëå" << endl;
+		cout << "Ð’Ñ‹ Ð² Ð¿Ð¾Ð´Ð²Ð°Ð»Ðµ" << endl;
 		return;
 	}
-	cout << "Âû íà " << floor << " ýòàæå" << endl;
+	cout << "Ð’Ñ‹ Ð½Ð° " << floor << " ÑÑ‚Ð°Ð¶Ðµ" << endl;
 	//elevator(floor-1);
-	//cout << "Âû íà " << floor << " ýòàæå" << endl;
+	//cout << "Ð’Ñ‹ Ð½Ð° " << floor << " ÑÑ‚Ð°Ð¶Ðµ" << endl;
 }
 
 int factorial(int number)
@@ -84,4 +84,4 @@ int powerr(int number, int degree)
 	return number * powerr(number, degree - 1);
 }
 
-//fibonachi, power(âîçâåäåíèå â ñòåïåíü), factorial
+//fibonachi, power(Ð²Ð¾Ð·Ð²ÐµÐ´ÐµÐ½Ð¸Ðµ Ð² ÑÑ‚ÐµÐ¿ÐµÐ½ÑŒ), factorial
