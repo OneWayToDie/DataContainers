@@ -2,6 +2,7 @@
 using namespace std;
 
 #define tab "\t"
+#define AvG (Root->Data + sum(Root->pLeft) + sum(Root->pRight)) / (count(Root->pLeft) + count(Root->pRight) + 1)
 
 class Tree
 {
@@ -21,6 +22,7 @@ class Tree
 			cout << "EDestructor:\t" << this << endl;
 		}
 		friend class Tree;
+		friend class UniqueTree;
 	}*Root;
 public:
 	Element* getRoot()const
@@ -50,6 +52,10 @@ public:
 			else insert(Data, Root->pRight);
 		}
 	}
+	int erase()
+	{
+
+	}
 	int minValue(Element* Root)
 	{
 	/*	if (Root->pLeft == nullptr)return Root->Data;
@@ -68,6 +74,18 @@ public:
 		else return count(Root->pLeft) + count(Root->pRight) + 1;*/
 		//return Root == nullptr ? 0 : count(Root->pLeft) + count(Root->pRight) + 1;
 		return !Root ? 0 : count(Root->pLeft) + count(Root->pRight) + 1;
+	}
+	double sum(Element* Root)
+	{
+		/*if (Root == nullptr) return 0;
+		else return Root->Data + sum(Root->pLeft) + sum(Root->pRight);*/
+		return !Root ? 0 : Root->Data + sum(Root->pLeft) + sum(Root->pRight);
+	}
+	double AVG(Element* Root)
+	{
+		/*if (Root == nullptr) return 0;
+		else return (Root->Data + sum(Root->pLeft) + sum(Root->pRight)) / (count(Root->pLeft) + count(Root->pRight) + 1);*/
+		return !Root ? 0 : AvG;
 	}
 	void print(Element* Root)const
 	{
@@ -95,4 +113,6 @@ void main()
 	cout << "Минимальное значение в дереве: " << tree.minValue(tree.getRoot()) << endl;
 	cout << "Максимальное значение в дереве: " << tree.maxValue(tree.getRoot()) << endl;
 	cout << "Количество элементов дерева: " << tree.count(tree.getRoot()) << endl;
+	cout << "Сумма элементов дерева: " << tree.sum(tree.getRoot()) << endl;
+	cout << "Среднее значение элементов дерева: " << tree.AVG(tree.getRoot()) << endl;
 }
