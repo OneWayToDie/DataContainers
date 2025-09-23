@@ -24,12 +24,6 @@ class Tree
 		friend class Tree;
 		friend class UniqueTree;
 	}*Root;
-	class UniqueTree
-	{
-		int UniqueData;
-	public:
-
-	};
 public:
 	Element* getRoot()const
 	{
