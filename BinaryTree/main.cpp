@@ -22,7 +22,6 @@ class Tree
 			cout << "EDestructor:\t" << this << endl;
 		}
 		friend class Tree;
-		friend class UniqueTree;
 	}*Root;
 public:
 	Element* getRoot()const
@@ -35,6 +34,7 @@ public:
 	}
 	~Tree()
 	{
+		clear(Root);
 		cout << "TDestructor:\t" << this << endl;
 	}
 	void insert(int Data, Element* Root)
@@ -52,27 +52,32 @@ public:
 			else insert(Data, Root->pRight);
 		}
 	}
-	int erase()
+	void not_erase(Element* Data)
 	{
-
+		if (Data == nullptr)return;
+		not_erase(Data->pLeft);
+		not_erase(Data->pRight);
+		
+		delete Data;
+	}
+	void clear(Element* Data)
+	{
+		if (Data == nullptr) return;
+		not_erase(Data->pLeft);
+		not_erase(Data->pRight);
+		//Data->pRight = Data->pLeft = nullptr;
+		delete Root;
 	}
 	int minValue(Element* Root)
 	{
-	/*	if (Root->pLeft == nullptr)return Root->Data;
-		else return minValue(Root->pLeft);*/
 		return Root == nullptr ? INT_MIN : Root->pLeft == nullptr ? Root->Data : minValue(Root->pLeft);
 	}
 	int maxValue(Element* Root)
 	{
-		/*if (Root->pRight == nullptr) return Root->Data;
-		else return maxValue(Root->pRight);*/
 		return !Root ? INT_MIN : Root->pRight ? maxValue(Root->pRight) : Root->Data;
 	}
 	int count(Element* Root)
 	{
-		/*if (Root == nullptr)return 0;
-		else return count(Root->pLeft) + count(Root->pRight) + 1;*/
-		//return Root == nullptr ? 0 : count(Root->pLeft) + count(Root->pRight) + 1;
 		return !Root ? 0 : count(Root->pLeft) + count(Root->pRight) + 1;
 	}
 	double sum(Element* Root)
@@ -97,10 +102,14 @@ public:
 };
 
 
+#define BAZIROVANNAYA_BAZA
+//#define UNIQUETREE
+
 void main()
 {
 	setlocale(LC_ALL, "");
-	//cout << "Hello Tree" << endl;
+
+#ifdef BAZIROVANNAYA_BAZA
 	int n;
 	cout << "Введите количество элементов: "; cin >> n;
 	Tree tree;
@@ -115,4 +124,11 @@ void main()
 	cout << "Количество элементов дерева: " << tree.count(tree.getRoot()) << endl;
 	cout << "Сумма элементов дерева: " << tree.sum(tree.getRoot()) << endl;
 	cout << "Среднее значение элементов дерева: " << tree.AVG(tree.getRoot()) << endl;
+#endif // BAZIROVANAYA_BAZA
+
+#ifdef UNIQUETREE
+
+
+#endif // UNIQUETREE
 }
+
