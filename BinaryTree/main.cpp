@@ -3,7 +3,7 @@ using namespace std;
 
 #define tab "\t"
 #define AvG (Root->Data + sum(Root->pLeft) + sum(Root->pRight)) / (count(Root->pLeft) + count(Root->pRight) + 1)
-#define DEBUG
+//#define DEBUG
 
 class Tree
 {
@@ -83,6 +83,10 @@ public:
 	int count()const
 	{
 		return count(Root);
+	}
+	int Depth()
+	{
+		return Root == nullptr ? 0 : Root->pLeft > Root->pRight ? 1 + Depth(Root->pLeft) : 1 + Depth(Root->pRight);
 	}
 	void print()const
 	{
@@ -172,13 +176,19 @@ private:
 		return Root == nullptr ? 0 : sum(Root->pLeft) + sum(Root->pRight) + Root->Data;
 		//return !Root ? 0 : Root->Data + sum(Root->pLeft) + sum(Root->pRight);
 	}
-	//double AVG()const
-	//{
-	//	/*if (Root == nullptr) return 0;
-	//	else return (Root->Data + sum(Root->pLeft) + sum(Root->pRight)) / (count(Root->pLeft) + count(Root->pRight) + 1);*/
-	//	//return !Root ? 0 : AvG;
-	//	return (double)sum(Root) / count(Root);
-	//}
+	int Depth(Element* Root)
+	{
+		//if (Root == nullptr)return 0;
+		//else
+		//{
+		///*	if(Root->pLeft > Root->pRight)
+		//		return 1 + Depth(Root->pLeft);
+		//	else 
+		//		return 1 + Depth(Root->pRight);*/
+		//	return Root->pLeft > Root->pRight ? 1 + Depth(Root->pLeft) : 1 + Depth(Root->pRight);
+		//}
+		return Root == nullptr ? 0 : Root->pLeft > Root->pRight ? 1 + Depth(Root->pLeft) : 1 + Depth(Root->pRight);
+	}
 	void print(Element* Root)const
 	{
 		if (Root == nullptr)return;
@@ -212,12 +222,12 @@ public:
 	}
 };
 
-//#define BASECHECK
+#define BASECHECK
+//#define ERASE_CHECK
 
 void main()
 {
 	setlocale(LC_ALL, "");
-	//cout << "Hello Tree" << endl;
 #ifdef BASECHECK
 	int n;
 	cout << "Введите количество элементов: "; cin >> n;
@@ -233,6 +243,7 @@ void main()
 	cout << "Количество элементов дерева: " << tree.count() << endl;
 	cout << "Сумма элементов дерева: " << tree.sum() << endl;
 	cout << "Среднее значение элементов дерева: " << tree.AVG() << endl;
+	cout << "Глубина дерева равна: " << tree.Depth() << endl;
 
 	UniqueTree u_tree;
 	for (int i = 0; i < n; i++)
@@ -245,15 +256,17 @@ void main()
 	cout << "Количество элементов дерева: " << u_tree.count() << endl;
 	cout << "Сумма элементов дерева: " << u_tree.sum() << endl;
 	cout << "Среднее значение элементов дерева: " << u_tree.AVG() << endl;
+	cout << "Глубина дерева равна: " << tree.Depth() << endl;
 #endif // BASECHECK
 
-	Tree tree = 
-	{ 
-					50, 
+#ifdef ERASE_CHECK
+	Tree tree =
+	{
+					50,
 
-		25,						75, 
+		25,						75,
 
-	16,			32,		58,				85 
+	16,			32,		58,				85
 	};
 	tree.print();
 
@@ -265,4 +278,8 @@ void main()
 	tree.erase(50);
 	tree.erase(75);
 	tree.print();
+	cout << "Глубина дерева равна: " << tree.Depth() << endl;
+#endif // ERASE_CHECK
+
+	
 }
