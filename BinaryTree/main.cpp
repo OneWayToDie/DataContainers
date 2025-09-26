@@ -1,8 +1,14 @@
 ﻿#include<iostream>
-using namespace std;
+#include<time.h>
+//using namespace std;
+using std::cin;
+using std::cout;
+using std::endl;
+
 
 #define tab "\t"
 #define AvG (Root->Data + sum(Root->pLeft) + sum(Root->pRight)) / (count(Root->pLeft) + count(Root->pRight) + 1)
+//#define runtime double(t_end - t_start)/CLOCKS_PER_SEC
 //#define DEBUG
 
 class Tree
@@ -84,7 +90,7 @@ public:
 	{
 		return count(Root);
 	}
-	int Depth()
+	int Depth()const
 	{
 		return Root == nullptr ? 0 : Root->pLeft > Root->pRight ? 1 + Depth(Root->pLeft) : 1 + Depth(Root->pRight);
 	}
@@ -152,41 +158,22 @@ private:
 	}
 	int minValue(Element* Root)const
 	{
-	/*	if (Root->pLeft == nullptr)return Root->Data;
-		else return minValue(Root->pLeft);*/
 		return Root == nullptr ? INT_MIN : Root->pLeft == nullptr ? Root->Data : minValue(Root->pLeft);
 	}
 	int maxValue(Element* Root)const
 	{
-		/*if (Root->pRight == nullptr) return Root->Data;
-		else return maxValue(Root->pRight);*/
 		return !Root ? INT_MIN : Root->pRight ? maxValue(Root->pRight) : Root->Data;
 	}
 	int count(Element* Root)const
 	{
-		/*if (Root == nullptr)return 0;
-		else return count(Root->pLeft) + count(Root->pRight) + 1;*/
-		//return Root == nullptr ? 0 : count(Root->pLeft) + count(Root->pRight) + 1;
 		return !Root ? 0 : count(Root->pLeft) + count(Root->pRight) + 1;
 	}
 	int sum(Element* Root)const
 	{
-		/*if (Root == nullptr) return 0;
-		else return Root->Data + sum(Root->pLeft) + sum(Root->pRight);*/
 		return Root == nullptr ? 0 : sum(Root->pLeft) + sum(Root->pRight) + Root->Data;
-		//return !Root ? 0 : Root->Data + sum(Root->pLeft) + sum(Root->pRight);
 	}
-	int Depth(Element* Root)
+	int Depth(Element* Root)const
 	{
-		//if (Root == nullptr)return 0;
-		//else
-		//{
-		///*	if(Root->pLeft > Root->pRight)
-		//		return 1 + Depth(Root->pLeft);
-		//	else 
-		//		return 1 + Depth(Root->pRight);*/
-		//	return Root->pLeft > Root->pRight ? 1 + Depth(Root->pLeft) : 1 + Depth(Root->pRight);
-		//}
 		return Root == nullptr ? 0 : Root->pLeft > Root->pRight ? 1 + Depth(Root->pLeft) : 1 + Depth(Root->pRight);
 	}
 	void print(Element* Root)const
@@ -222,8 +209,9 @@ public:
 	}
 };
 
-#define BASECHECK
+//#define BASECHECK
 //#define ERASE_CHECK
+#define PeRfOrMaNcE
 
 void main()
 {
@@ -281,5 +269,44 @@ void main()
 	cout << "Глубина дерева равна: " << tree.Depth() << endl;
 #endif // ERASE_CHECK
 
-	
+#ifdef PeRfOrMaNcE
+	int n;
+	cout << "Введите количество элементов: "; cin >> n;
+	Tree tree;
+	clock_t t_start_element = clock();
+	for (int i = 0; i < n; i++)
+	{
+		tree.insert(rand() % 100);
+	}
+	clock_t t_end_element = clock();
+	cout << "Бинарное дерево заполнено за " << double(t_end_element - t_start_element) / CLOCKS_PER_SEC << " секунд" << endl;
+	system("PAUSE");
+	cout << "\nВывод производительности методов: " << "\n\n";
+	clock_t t_start_depth = clock();
+	tree.Depth();
+	clock_t t_end_depth = clock();
+	cout << "Глубина дерева посчитана за " << double(t_end_depth - t_start_depth) / CLOCKS_PER_SEC << " секунд" << endl;	
+	clock_t t_start_min = clock();
+	tree.minValue();
+	clock_t t_end_min = clock();
+	cout << "Минимальное значение дерева посчитано за " << double(t_end_min - t_start_min) / CLOCKS_PER_SEC << " секунд" << endl;	
+	clock_t t_start_max = clock();
+	tree.maxValue();
+	clock_t t_end_max = clock();
+	cout << "Максимальное значение дерева посчитано за " << double(t_end_max - t_start_max) / CLOCKS_PER_SEC << " секунд" << endl;
+	clock_t t_start_count = clock();
+	tree.count();
+	clock_t t_end_count = clock();
+	cout << "Количество элементов дерева посчитано за " << double(t_end_count - t_start_count) / CLOCKS_PER_SEC << " секунд" << endl;	
+	clock_t t_start_sum = clock();
+	tree.sum();
+	clock_t t_end_sum = clock();
+	cout << "Сумма элементов дерева посчитано за " << double(t_end_sum - t_start_sum) / CLOCKS_PER_SEC << " секунд" << endl;
+	clock_t t_start_avg = clock();
+	tree.AVG();
+	clock_t t_end_avg = clock();
+	cout << "Среднее арифметическое элементов дерева посчитано за " << double(t_end_avg - t_start_avg) / CLOCKS_PER_SEC << " секунд" << "\n\n";
+	system("PAUSE");
+#endif // PeRfOrMaNcE
+
 }
