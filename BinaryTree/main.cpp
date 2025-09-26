@@ -1,5 +1,6 @@
 ﻿#include<iostream>
 #include<time.h>
+#include<algorithm>
 using namespace std;
 using std::cout;
 using std::cin;
@@ -8,6 +9,8 @@ using std::endl;
 #define tab "\t"
 #define AvG (Root->Data + sum(Root->pLeft) + sum(Root->pRight)) / (count(Root->pLeft) + count(Root->pRight) + 1)
 #define runtime double(end - start) / CLOCKS_PER_SEC
+#define MAX(a,b)a>b?a:b
+
 //#define DEBUG
 
 class Tree
@@ -192,12 +195,17 @@ private:
 		//		return 1 + Depth(Root->pRight);
 		//	//return Root->pLeft > Root->pRight ? 1 + Depth(Root->pLeft) : 1 + Depth(Root->pRight);
 		//}
-		//return Root == nullptr ? 0 : Root->pLeft > Root->pRight ? 1 + Depth(Root->pLeft) : 1 + Depth(Root->pRight);
-		return 
+		//return Root == nullptr ? 0 : Depth(Root->pLeft) > Depth(Root->pRight) ? 1 + Depth(Root->pLeft) : 1 + Depth(Root->pRight);
+	/*	if (Root == nullptr) return 0;
+		int l_depth = Depth(Root->pLeft) + 1;
+		int r_depth = Depth(Root->pRight) + 1;
+		return l_depth < r_depth ? r_depth : l_depth;*/
+		return Root == nullptr ? 0 : std::max(Depth(Root->pLeft) + 1, Depth(Root->pRight) + 1);
+		/*return 
 			Root == nullptr ? 0 : 
 			Depth(Root->pLeft) + 1 > Depth(Root->pRight) + 1 ? 
 			Depth(Root->pLeft) + 1 : 
-			Depth(Root->pRight) + 1;
+			Depth(Root->pRight) + 1;*/
 	}
 	void print(Element* Root)const
 	{
@@ -244,7 +252,7 @@ template<typename T>void measure_performance(const char message[], T(Tree::*func
 
 //#define BASECHECK
 //#define ERASE_CHECK
-
+#define performance_check
 
 void main()
 {
@@ -302,6 +310,7 @@ void main()
 	cout << "Глубина дерева равна: " << tree.Depth() << endl;
 #endif // ERASE_CHECK
 
+#ifdef performance_check
 	int n;
 	cout << "Введите количество элементов: "; cin >> n;
 	Tree tree;
@@ -322,4 +331,6 @@ void main()
 	measure_performance("Сумма элементов дерева: ", &Tree::sum, tree);
 	measure_performance("Количество элементов дерева: ", &Tree::count, tree);
 	measure_performance("Среднее значение элементов дерева: ", &Tree::AVG, tree);
+	measure_performance("Глубина дерева: ", &Tree::Depth, tree);
+#endif // performance_check
 }
