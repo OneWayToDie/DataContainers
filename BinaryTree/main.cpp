@@ -92,7 +92,7 @@ public:
 	}
 	int Depth()const
 	{
-		return Depth();
+		return Root == nullptr ? 0 : Root->pLeft > Root->pRight ? 1 + Depth(Root->pLeft) : 1 + Depth(Root->pRight);
 	}
 	void print()const
 	{
