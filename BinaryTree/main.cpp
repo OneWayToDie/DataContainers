@@ -13,16 +13,19 @@ using std::endl;
 
 //#define DEBUG
 
+
+
+template<typename T>
 class Tree
 {
 protected:
 	class Element
 	{
-		int Data;
+		T Data;
 		Element* pLeft;
 		Element* pRight;
 	public:
-		Element(int Data, Element* pLeft = nullptr, Element* pRight = nullptr) :
+		Element(T Data, Element* pLeft = nullptr, Element* pRight = nullptr) :
 			Data(Data), pLeft(pLeft), pRight(pRight)
 		{
 #ifdef DEBUG
@@ -38,6 +41,7 @@ protected:
 
 		}
 		friend class Tree;
+		template<typename T>
 		friend class UniqueTree;
 	}*Root;
 public:
@@ -49,9 +53,9 @@ public:
 	{
 		cout << "TConstructor:\t" << this << endl;
 	}
-	Tree(const std::initializer_list<int>& il) :Tree()
+	Tree(const std::initializer_list<T>& il) :Tree()
 	{
-		for (int const* it = il.begin(); it != il.end(); ++it)
+		for (T const* it = il.begin(); it != il.end(); ++it)
 			insert(*it, Root);
 		cout << "ILConstructor:\t" << this << endl;
 	}
@@ -64,39 +68,39 @@ public:
 	{
 		clear(Root);
 	}
-	void insert(int Data)
+	void insert(T Data)
 	{
 		insert(Data, Root);  
 	}
-	void erase(int Data)
+	void erase(T Data)
 	{
 		erase(Data, Root);
 	}
-	int minValue()const
+	T minValue()const
 	{
 		return minValue(Root);
 	}
-	int maxValue()const
+	T maxValue()const
 	{
 		return maxValue(Root);
 	}
-	int sum()const
+	T sum()const
 	{
 		return sum(Root);
 	}
-	double AVG()const
+	T AVG()const
 	{
 		return (double)sum(Root) / count(Root);
 	}
-	int count()const
+	T count()const
 	{
 		return count(Root);
 	}
-	int Depth()const
+	T Depth()const
 	{
 		return Depth(Root);
 	}
-	void depth_print(int depth, int width = 4)const
+	void depth_print(T depth, T width = 4)const
 	{
 		depth_print(depth, Root, width);
 		cout << endl;
@@ -119,7 +123,7 @@ private:
 		delete Root;
 		Root = nullptr;
 	}
-	void insert(int Data, Element* Root)
+	void insert(T Data, Element* Root)
 	{
 		if (this->Root == nullptr) this->Root = new Element(Data);
 		if (Root == nullptr)return;
@@ -134,7 +138,7 @@ private:
 			else insert(Data, Root->pRight);
 		}
 	}
-	void erase(int Data, Element*& Root)
+	void erase(T Data, Element*& Root)
 	{
 		if (Root == nullptr)return;
 		erase(Data, Root->pLeft);
@@ -167,33 +171,25 @@ private:
 			}
 		}
 	}
-	int minValue(Element* Root)const
+	T minValue(Element* Root)const
 	{
-	/*	if (Root->pLeft == nullptr)return Root->Data;
-		else return minValue(Root->pLeft);*/
+
 		return Root == nullptr ? INT_MIN : Root->pLeft == nullptr ? Root->Data : minValue(Root->pLeft);
 	}
-	int maxValue(Element* Root)const
+	T maxValue(Element* Root)const
 	{
-		/*if (Root->pRight == nullptr) return Root->Data;
-		else return maxValue(Root->pRight);*/
 		return !Root ? INT_MIN : Root->pRight ? maxValue(Root->pRight) : Root->Data;
 	}
-	int count(Element* Root)const
+	T count(Element* Root)const
 	{
-		/*if (Root == nullptr)return 0;
-		else return count(Root->pLeft) + count(Root->pRight) + 1;*/
-		//return Root == nullptr ? 0 : count(Root->pLeft) + count(Root->pRight) + 1;
+
 		return !Root ? 0 : count(Root->pLeft) + count(Root->pRight) + 1;
 	}
-	int sum(Element* Root)const
+	T sum(Element* Root)const
 	{
-		/*if (Root == nullptr) return 0;
-		else return Root->Data + sum(Root->pLeft) + sum(Root->pRight);*/
 		return Root == nullptr ? 0 : sum(Root->pLeft) + sum(Root->pRight) + Root->Data;
-		//return !Root ? 0 : Root->Data + sum(Root->pLeft) + sum(Root->pRight);
 	}
-	int Depth(Element* Root)const
+	T Depth(Element* Root)const
 	{
 		//if (Root == nullptr)return 0;
 		//else
@@ -216,7 +212,7 @@ private:
 			Depth(Root->pLeft) + 1 : 
 			Depth(Root->pRight) + 1;*/
 	}
-	void depth_print(int depth, Element* Root, int width = 4)const
+	void depth_print(T depth, Element* Root, T width = 4)const
 	{
 		if (Root == nullptr)return;
 		if (depth == 0)
@@ -227,7 +223,7 @@ private:
 		depth_print(depth - 1, Root->pLeft, width);
 		depth_print(depth - 1, Root->pRight, width);
 	}
-	void tree_print(int depth, int width)const
+	void tree_print(T depth, T width)const
 	{
 		if (depth == -1)return;
 		tree_print(depth - 1, width * 1.5);
@@ -242,34 +238,37 @@ private:
 		cout << Root->Data << tab;
 		print(Root->pRight);
 	}
+
 };
 
-class UniqueTree :public Tree
+template<typename T>
+class UniqueTree :public Tree<T>
 {
-	void insert(int Data, Element* Root)
+	void insert(T Data, typename Tree<T>::Element* Root)
 	{
-		if (this->Root == nullptr) this->Root = new Element(Data);
+		if (this->Root == nullptr)this->Root = new typename Tree<T>::Element(Data);
 		if (Root == nullptr)return;
 		if (Data < Root->Data)
 		{
-			if (Root->pLeft == nullptr)Root->pLeft = new Element(Data);
+			if (Root->pLeft == nullptr)Root->pLeft = new typename Tree<T>::Element(Data);
 			else insert(Data, Root->pLeft);
 		}
 		else if(Data > Root->Data)
 		{
-			if (Root->pRight == nullptr)Root->pRight = new Element(Data);
+			if (Root->pRight == nullptr)Root->pRight = new typename Tree<T>::Element(Data);
 			else insert(Data, Root->pRight);
 		}
 	}
 public:
-	void insert(int Data)
+	void insert(T Data)
 	{
-		insert(Data, Root);
+		insert(Data, this->Root);
 	}
 };
 
 
-template<typename T>void measure_performance(const char message[], T(Tree::*function)()const, const Tree& tree)
+
+template<typename T>void measure_performance(const char message[], T(Tree<int>::*function)()const, const Tree<int>& tree)
 {
 	//int (*function)()) - указатель на функцию, которая ничего не принимает, и возвращает значение типа 'int'
 	clock_t start = clock();
@@ -278,9 +277,9 @@ template<typename T>void measure_performance(const char message[], T(Tree::*func
 	cout << message << result << ", вычислено за " << runtime << " секунд/n" << endl;
 }
 
-//#define BASECHECK
+#define BASECHECK
 //#define ERASE_CHECK
-#define DEPTH_CHECK
+//#define DEPTH_CHECK
 //#define performance_check
 
 void main()
@@ -289,7 +288,7 @@ void main()
 #ifdef BASECHECK
 	int n;
 	cout << "Введите количество элементов: "; cin >> n;
-	Tree tree;
+	Tree<int> tree;
 	for (int i = 0; i < n; i++)
 	{
 		tree.insert(rand() % 100);
@@ -303,7 +302,7 @@ void main()
 	cout << "Среднее значение элементов дерева: " << tree.AVG() << endl;
 	cout << "Глубина дерева равна: " << tree.Depth() << endl;
 
-	UniqueTree u_tree;
+	UniqueTree<int> u_tree;
 	for (int i = 0; i < n; i++)
 	{
 		u_tree.insert(rand() % 100);
@@ -359,16 +358,16 @@ void main()
 #ifdef performance_check
 	int n;
 	cout << "Введите количество элементов: "; cin >> n;
-	Tree tree;
+	Tree<int> tree;
 	for (int i = 0; i < n; i++)
 	{
 		tree.insert(rand() % 100);
 	}
-	measure_performance("Минимальное значение в дереве: ", &Tree::minValue, tree);
-	measure_performance("Максимальное значение в дереве: ", &Tree::maxValue, tree);
-	measure_performance("Сумма элементов дерева: ", &Tree::sum, tree);
-	measure_performance("Количество элементов дерева: ", &Tree::count, tree);
-	measure_performance("Среднее значение элементов дерева: ", &Tree::AVG, tree);
-	measure_performance("Глубина дерева: ", &Tree::Depth, tree);
+	measure_performance("Минимальное значение в дереве: ", &Tree<int>::minValue, tree);
+	measure_performance("Максимальное значение в дереве: ", &Tree<int>::maxValue, tree);
+	measure_performance("Сумма элементов дерева: ", &Tree<int>::sum, tree);
+	measure_performance("Количество элементов дерева: ", &Tree<int>::count, tree);
+	measure_performance("Среднее значение элементов дерева: ", &Tree<int>::AVG, tree);
+	measure_performance("Глубина дерева: ", &Tree<int>::Depth, tree);
 #endif // performance_check
 }
