@@ -109,6 +109,28 @@ public:
 	{
 		tree_print(Depth(), 4*Depth());
 	}
+	void balance(Element* Root)const
+	{
+		/*return balance(getRoot());*/
+		if (Root == nullptr)return;
+		if (count(Root->pLeft) - count(Root->pRight) < 2) return;
+		if (count(Root->pLeft) < count(Root->pRight))
+		{
+			if (Root->pLeft == nullptr)Root->pLeft = new Element(Root->Data);
+			else insert(Root->Data, Root->pLeft);
+			Root->Data = maxValue(Root->pRight);
+			erase(maxValue(Root->pLeft), Root->pLeft);
+		}
+		else
+		{
+			if (Root->pLeft == nullptr)Root->pLeft = new Element(Root->Data);
+			else insert(Root->Data, Root->pLeft);
+			Root->Data = minValue(Root->pRight);
+			erase(minValue(Root->pRight), Root->pRight);
+		}
+		balance(Root->pLeft);
+		balance(Root->pRight);
+	}
 	void print()const
 	{
 		print(Root);
@@ -173,7 +195,6 @@ private:
 	}
 	T minValue(Element* Root)const
 	{
-
 		return Root == nullptr ? INT_MIN : Root->pLeft == nullptr ? Root->Data : minValue(Root->pLeft);
 	}
 	T maxValue(Element* Root)const
@@ -231,6 +252,27 @@ private:
 		cout << "\n\n\n";
 
 	}
+	/*void balance(T* Root)const
+	{
+		if (Root == nullptr)return;
+		if (count(Root->pLeft) - count(Root->pRight) < 2) return;
+		if (count(Root->pLeft) < count(Root->pRight))
+		{
+			if (Root->pLeft == nullptr)Root->pLeft = new Element(Root->Data);
+			else insert(Root->Data, Root->pLeft);
+			Root->Data = maxValue(Root->pRight);
+			Erase(maxValue(Root->pLeft), Root->pLeft);
+		}
+		else
+		{
+			if (Root->pLeft == nullptr)Root->pLeft = new Element(Root->Data);
+			else insert(Root->Data, Root->pLeft);
+			Root->Data = minValue(Root->pRight);
+			Erase(minValue(Root->pRight), Root->pRight);
+		}
+		balance(Root->pLeft);
+		balance(Root->pRight);
+	}*/
 	void print(Element* Root)const
 	{
 		if (Root == nullptr)return;
@@ -277,9 +319,9 @@ template<typename T>void measure_performance(const char message[], T(Tree<int>::
 	cout << message << result << ", вычислено за " << runtime << " секунд/n" << endl;
 }
 
-#define BASECHECK
+//#define BASECHECK
 //#define ERASE_CHECK
-//#define DEPTH_CHECK
+#define DEPTH_CHECK
 //#define performance_check
 
 void main()
@@ -317,7 +359,7 @@ void main()
 #endif // BASECHECK
 
 #ifdef ERASE_CHECK
-	Tree tree =
+	Tree<int> tree =
 	{
 					50,
 
@@ -341,7 +383,7 @@ void main()
 #ifdef DEPTH_CHECK
 	//int n;
 	//cout << "Введите глубину: "; cin >> n;
-	Tree tree =
+	Tree<int> tree =
 	{
 					50,
 
@@ -353,6 +395,10 @@ void main()
 	cout << "Глубина дерева равна: " << tree.Depth() << endl;
 	//tree.depth_print(3);
 	tree.tree_print();
+	tree.erase(32);
+	tree.balance(tree.getRoot());
+	tree.tree_print();
+
 #endif // DEPTH_CHECK
 
 #ifdef performance_check
