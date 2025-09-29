@@ -109,6 +109,8 @@ public:
 	void balance(Element* Root)
 	{
 		if (Root == nullptr)return;
+		balance(Root->pLeft);
+		balance(Root->pRight);
 		if (count(Root->pLeft) - count(Root->pRight) < 2) return;
 		if (count(Root->pLeft) < count(Root->pRight))
 		{
@@ -117,15 +119,15 @@ public:
 			Root->Data = maxValue(Root->pRight);
 			erase(maxValue(Root->pLeft), Root->pLeft);
 		}
-		else
+		if (count(Root->pLeft) > count(Root->pRight))
 		{
 			if (Root->pLeft == nullptr)Root->pLeft = new Element(Root->Data);
 			else insert(Root->Data, Root->pLeft);
 			Root->Data = minValue(Root->pRight);
 			erase(minValue(Root->pRight), Root->pRight);
 		}
-		balance(Root->pLeft);
-		balance(Root->pRight);
+		
+		balance(Root);
 	}
 	void tree_print()const
 	{
