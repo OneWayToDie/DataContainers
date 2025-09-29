@@ -106,27 +106,8 @@ public:
 		depth_print(depth, Root, width);
 		cout << endl;
 	}
-	void balance(Element* Root)
+	void balance()
 	{
-		if (Root == nullptr)return;
-		balance(Root->pLeft);
-		balance(Root->pRight);
-		if (count(Root->pLeft) - count(Root->pRight) < 2) return;
-		if (count(Root->pLeft) < count(Root->pRight))
-		{
-			if (Root->pLeft == nullptr)Root->pLeft = new Element(Root->Data);
-			else insert(Root->Data, Root->pLeft);
-			Root->Data = maxValue(Root->pRight);
-			erase(maxValue(Root->pLeft), Root->pLeft);
-		}
-		if (count(Root->pLeft) > count(Root->pRight))
-		{
-			if (Root->pLeft == nullptr)Root->pLeft = new Element(Root->Data);
-			else insert(Root->Data, Root->pLeft);
-			Root->Data = minValue(Root->pRight);
-			erase(minValue(Root->pRight), Root->pRight);
-		}
-		
 		balance(Root);
 	}
 	void tree_print()const
@@ -234,6 +215,29 @@ private:
 		depth_print(depth - 1, width);
 		cout << "\n\n\n";
 
+	}
+	void balance(Element* Root)
+	{
+		if (Root == nullptr)return;
+		balance(Root->pLeft);
+		balance(Root->pRight);
+		if (count(Root->pLeft) - count(Root->pRight) < 2) return;
+		if (count(Root->pLeft) < count(Root->pRight))
+		{
+			if (Root->pLeft)insert(Root->Data, Root->pLeft);
+			else Root->pLeft = new Element(Root->Data);
+			Root->Data = minValue(Root->pRight);
+			erase(minValue(Root->pRight), Root->pRight);
+			balance(Root);
+		}
+		if (count(Root->pLeft) > count(Root->pRight))
+		{
+			if (Root->pRight)insert(Root->Data, Root->pRight);
+			else Root->pRight = new Element(Root->Data);
+			Root->Data = maxValue(Root->pLeft);
+			erase(maxValue(Root->pLeft), Root->pLeft);
+			balance(Root);
+		}
 	}
 	void print(Element* Root)const
 	{
@@ -358,7 +362,7 @@ void main()
 	tree.tree_print();
 	tree.erase(58);
 	tree.erase(85);
-	tree.balance(tree.getRoot());
+	tree.balance();
 	tree.tree_print();
 	cout << "Глубина дерева равна: " << tree.Depth() << endl;
 #endif // DEPTH_CHECK
