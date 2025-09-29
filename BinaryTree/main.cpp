@@ -13,7 +13,8 @@ using std::endl;
 
 //#define DEBUG
 
-
+template<typename T>class Tree;
+template<typename T>class UniqueTree;
 
 template<typename T>
 class Tree
@@ -40,9 +41,9 @@ protected:
 #endif // DEBUG
 
 		}
-		friend class Tree;
-		template<typename T>
-		friend class UniqueTree;
+		friend class Tree<T>;
+		/*template<typename T>*/
+		friend class UniqueTree<T>;
 	}*Root;
 public:
 	Element* getRoot()const
@@ -70,7 +71,7 @@ public:
 	}
 	void insert(T Data)
 	{
-		insert(Data, Root);  
+		insert(Data, Root);
 	}
 	void erase(T Data)
 	{
@@ -105,9 +106,30 @@ public:
 		depth_print(depth, Root, width);
 		cout << endl;
 	}
+	void balance(Element* Root)
+	{
+		if (Root == nullptr)return;
+		if (count(Root->pLeft) - count(Root->pRight) < 2) return;
+		if (count(Root->pLeft) < count(Root->pRight))
+		{
+			if (Root->pLeft == nullptr)Root->pLeft = new Element(Root->Data);
+			else insert(Root->Data, Root->pLeft);
+			Root->Data = maxValue(Root->pRight);
+			erase(maxValue(Root->pLeft), Root->pLeft);
+		}
+		else
+		{
+			if (Root->pLeft == nullptr)Root->pLeft = new Element(Root->Data);
+			else insert(Root->Data, Root->pLeft);
+			Root->Data = minValue(Root->pRight);
+			erase(minValue(Root->pRight), Root->pRight);
+		}
+		balance(Root->pLeft);
+		balance(Root->pRight);
+	}
 	void tree_print()const
 	{
-		tree_print(Depth(), 4*Depth());
+		tree_print(Depth(), 4 * Depth());
 	}
 	void print()const
 	{
@@ -218,7 +240,6 @@ private:
 		cout << Root->Data << tab;
 		print(Root->pRight);
 	}
-
 };
 
 template<typename T>
@@ -233,7 +254,7 @@ class UniqueTree :public Tree<T>
 			if (Root->pLeft == nullptr)Root->pLeft = new typename Tree<T>::Element(Data);
 			else insert(Data, Root->pLeft);
 		}
-		else if(Data > Root->Data)
+		else if (Data > Root->Data)
 		{
 			if (Root->pRight == nullptr)Root->pRight = new typename Tree<T>::Element(Data);
 			else insert(Data, Root->pRight);
@@ -248,7 +269,7 @@ public:
 
 
 
-template<typename T>void measure_performance(const char message[], T(Tree<int>::*function)()const, const Tree<int>& tree)
+template<typename T>void measure_performance(const char message[], T(Tree<int>::* function)()const, const Tree<int>& tree)
 {
 	//int (*function)()) - указатель на функцию, которая ничего не принимает, и возвращает значение типа 'int'
 	clock_t start = clock();
@@ -335,7 +356,7 @@ void main()
 	tree.tree_print();
 	tree.erase(58);
 	tree.erase(85);
-	//tree.balance(tree.getRoot());
+	tree.balance(tree.getRoot());
 	tree.tree_print();
 	cout << "Глубина дерева равна: " << tree.Depth() << endl;
 #endif // DEPTH_CHECK
@@ -356,10 +377,6 @@ void main()
 	measure_performance("Глубина дерева: ", &Tree<int>::Depth, tree);
 #endif // performance_check
 }
-
-
-
-
 
 
 
