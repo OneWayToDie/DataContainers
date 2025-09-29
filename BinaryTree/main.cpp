@@ -60,6 +60,13 @@ public:
 		clear();
 		cout << "TDestructor:\t" << this << endl;
 	}
+	void balance()
+	{
+		balance(Root);
+		cout << "Left count:\t" << count(Root->pLeft) << endl;
+		cout << "Right count:\t" << count(Root->pRight) << endl;
+
+	}
 	void clear()
 	{
 		clear(Root);
@@ -96,7 +103,7 @@ public:
 	{
 		return Depth(Root);
 	}
-	void depth_print(int depth, int width = 4)const
+	void depth_print(int depth, int width = 2)const
 	{
 		depth_print(depth, Root, width);
 		cout << endl;
@@ -111,6 +118,29 @@ public:
 		cout << endl;
 	}
 private:
+	void balance(Element* Root)
+	{
+		if (Root == nullptr)return;
+		balance(Root->pLeft);
+		balance(Root->pRight);
+		if (abs(count(Root->pLeft) - count(Root->pRight)) < 2)return;
+		if (count(Root->pLeft) < count(Root->pRight))
+		{
+			if (Root->pLeft)insert(Root->Data, Root->pLeft);
+			else Root->pLeft = new Element(Root->Data);
+			Root->Data = minValue(Root->pRight);
+			erase(minValue(Root->pRight), Root->pRight);
+			balance(Root);
+		}
+		if (count(Root->pLeft) > count(Root->pRight))
+		{
+			if (Root->pRight)insert(Root->Data, Root->pRight);
+			else Root->pRight = new Element(Root->Data);
+			Root->Data = maxValue(Root->pLeft);
+			erase(maxValue(Root->pLeft), Root->pLeft);
+			balance(Root);
+		}
+	}
 	void clear(Element*& Root)
 	{
 		if (Root == nullptr)return;
@@ -218,10 +248,16 @@ private:
 	}
 	void depth_print(int depth, Element* Root, int width = 4)const
 	{
-		if (Root == nullptr)return;
+		if (Root == nullptr)
+		{
+			/*cout.width(width);
+			cout << " ";*/
+			return;
+		}
 		if (depth == 0)
 		{
 			cout.width(width);
+			//cout << " ";
 			cout << Root->Data;
 		}
 		depth_print(depth - 1, Root->pLeft, width);
@@ -229,7 +265,10 @@ private:
 	}
 	void tree_print(int depth, int width)const
 	{
-		if (depth == -1)return;
+		if (depth == -1)
+		{
+			return;
+		}
 		tree_print(depth - 1, width * 1.5);
 		depth_print(depth - 1, width);
 		cout << "\n\n\n";
@@ -237,7 +276,10 @@ private:
 	}
 	void print(Element* Root)const
 	{
-		if (Root == nullptr)return;
+		if (Root == nullptr)
+		{
+			return;
+		}
 		print(Root->pLeft);
 		cout << Root->Data << tab;
 		print(Root->pRight);
@@ -348,12 +390,20 @@ void main()
 
 		25,						75,
 
-	16,			32,		58,				85 //, 91, 98
+	16,			32,		58,				85, 
+  8,									   //91, 98
 	};
 	tree.print();
 	cout << "Глубина дерева равна: " << tree.Depth() << endl;
 	//tree.depth_print(3);
-	tree.tree_print();
+	//tree.tree_print();
+
+	Tree tree2 = { 55, 34, 21, 13, 8, 5, 3 };
+	tree2.tree_print();
+	tree2.balance();
+	cout << "\n---------------------------------------------------------------\n";
+	tree2.tree_print();
+	system("PAUSE");
 #endif // DEPTH_CHECK
 
 #ifdef performance_check
