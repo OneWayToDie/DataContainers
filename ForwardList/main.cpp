@@ -294,7 +294,8 @@ void Print(int arr[])
 //#define SUBSCRIPT_OPERATOR_CHECK
 //#define COPY_SEMANTIC_PERFORMANCE_CHECK
 //#define MOVE_SEMANTIC_CHECK
-//#define RANGE_BASED_FOR_ARRAY
+#define RANGE_BASED_FOR_ARRAY
+//#define Range_Based_TWO
 
 
 void main()
@@ -463,6 +464,7 @@ void main()
 	Print(arr);
 #endif // RANGE_BASED_FOR_ARRAY
 
+#ifdef Range_Based_TWO
 	ForwardList list = { 3, 5, 8, 13, 21 };	//перечисление значений в фигурных скобках через запятую неявно создаёт объект класса 'initializer_list';
 
 	list.print();
@@ -475,4 +477,6 @@ void main()
 		cout << *it << tab;
 	}
 	cout << endl;
+#endif // Range_Based_TWO
+
 }
